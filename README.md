@@ -2,7 +2,8 @@
 
 > A TypeScript project template that goes from clone to live URL in ten minutes, with tests, CI and supply-chain checks already wired.
 
-**[Live demo](https://...)** · Built for phase <N> of [the sixty-week spine](https://github.com/<you>/sixty-week-spine)
+**Status:** local tooling in progress; deployment is pending. See the
+[implementation plan](docs/implementation-plan.md) and [new-chat handoff](docs/handoff.md).
 
 <!-- A GIF or screenshot of it doing something real, right here. Above the fold. -->
 
@@ -45,10 +46,22 @@ section that reads as senior.>
 
 ## Run it
 
+Local tooling is implemented through the coverage gate. Biome is installed;
+formatting/linting setup and the deployment quickstart are still pending.
+Follow [runtime setup](docs/runtime.md) to install nvm first.
+
 ```bash
-git clone …
-make demo
+nvm install
+nvm use
+npm ci
+npm run typecheck
+npm test
+npm run coverage
 ```
+
+Coverage requires 100% of source statements, branches, functions, and lines,
+including unimported source. See the [coverage explanation and verification](docs/coverage-gate.md)
+and [implementation checklist](docs/implementation-plan.md) for current progress.
 
 ## Out of scope
 
