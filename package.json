@@ -1,23 +1,30 @@
 {
-  "name": "ship-kit",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "engines": {
-    "node": "24.20.0",
-    "npm": "11.19.0"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "coverage": "vitest run --coverage"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.5.12",
-    "@types/node": "24.13.3",
-    "@vitest/coverage-v8": "5.0.0",
-    "typescript": "7.0.2",
-    "vite": "8.2.2",
-    "vitest": "5.0.0"
-  }
+    "name": "ship-kit",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": "24.20.0",
+        "npm": "11.19.0"
+    },
+    "scripts": {
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "coverage": "vitest run --coverage",
+        "lint": "biome lint . --error-on-warnings",
+        "format": "biome format --write .",
+        "format:check": "biome format .",
+        "scan:code": "semgrep scan --config .semgrep.yml --error --strict --metrics=off --disable-version-check src",
+        "scan:secrets:files": "gitleaks dir --config .gitleaks.toml --redact=100 --exit-code 1 .",
+        "scan:secrets:history": "gitleaks git --config .gitleaks.toml --redact=100 --exit-code 1 .",
+        "scan:secrets": "npm run scan:secrets:files && npm run scan:secrets:history"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "2.5.12",
+        "@types/node": "24.13.3",
+        "@vitest/coverage-v8": "5.0.0",
+        "typescript": "7.0.2",
+        "vite": "8.2.2",
+        "vitest": "5.0.0"
+    }
 }

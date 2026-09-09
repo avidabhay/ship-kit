@@ -104,5 +104,5 @@ negative run. A nonzero exit from an unrelated error is not sufficient evidence.
 ## Review status
 
 Guided review completed on 2026-09-09, including the learner's type, assertion,
-and unimported-source experiments. Formatting/linting is the current unfinished
-milestone. See the [implementation checklist](implementation-plan.md).
+and unimported-source experiments. See the
+[implementation checklist](implementation-plan.md) for current progress.

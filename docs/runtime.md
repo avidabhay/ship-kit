@@ -7,18 +7,34 @@ The previous terminal selected an older system Node while the editor supplied
 another version. A temporary editor PATH change fixed one session. The setup
 below selects the project runtime independently of the editor.
 
-## Every work session
+## Runtime selection during work
 
-In a terminal with nvm loaded, from the repository root:
+The local Bash setup already loads nvm and has a default matching `.nvmrc`.
+A fresh interactive Bash selected the pinned Node/npm without `nvm use` during
+verification on 2026-09-09, even when started with the old system Node first in
+PATH. No shell configuration change was needed.
+
+In an existing terminal, selection persists until something changes it. Do not
+repeat `nvm use` before every npm command. To inspect the active runtime:
 
 ```bash
-nvm use
 node --version
 npm --version
 ```
 
-Expected: `v24.20.0` and `11.19.0`. The version comes from `.nvmrc`.
-Entering the directory alone does not automatically run `nvm use`.
+Expected for this project: `v24.20.0` and `11.19.0`. If the active version differs,
+run `nvm use` from the repository root. This is useful after selecting another
+project's runtime. `.nvmrc` records the pin; entering the directory alone does
+not switch Node automatically. A shell inheriting another active nvm version
+can preserve it despite the default alias.
+
+nvm selects a per-user installation under `~/.nvm/versions/node/` by changing
+PATH for the shell. That installation can serve multiple projects. It is
+separate from both the system Node installation and this repo's `node_modules/`.
+
+Noninteractive tool shells still need explicit initialization when nvm is not
+loaded; use the snippet in [handoff.md](handoff.md). Those separate processes do
+not imply that the user's ongoing interactive terminal needs repeated selection.
 
 ## First setup on a machine
 
@@ -63,7 +79,7 @@ would no longer match the project's pin.
 | `package-lock.json` | Records the resolved dependency tree for `npm ci`. |
 
 The install guard does not select Node or enforce the runtime of every script.
-Run `nvm use` before work. Exact runtime requirements make upgrades deliberate:
+Select the pinned runtime when needed. Exact runtime requirements make upgrades deliberate:
 update `.nvmrc`, both engine fields, the lockfile metadata, and these instructions
 together after checking primary sources and rerunning the checks.
 

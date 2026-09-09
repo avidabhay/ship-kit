@@ -1,75 +1,138 @@
 # ship-kit
 
+A reusable TypeScript starter with strict type checking, tests and coverage,
+formatting/linting, and local source-code and secret scans.
+
+**Status — 2026-09-10:** local tooling checkpoint. CI, build/deployment, a live
+URL, and GitHub template publication are pending. This project is not shipped.
+See the [implementation plan](docs/implementation-plan.md) and
+[next-session handoff](docs/handoff.md).
+
+The roadmap target is:
+
 > A TypeScript project template that goes from clone to live URL in ten minutes, with tests, CI and supply-chain checks already wired.
 
-**Status:** local tooling in progress; deployment is pending. See the
-[implementation plan](docs/implementation-plan.md) and [new-chat handoff](docs/handoff.md).
-
-<!-- A GIF or screenshot of it doing something real, right here. Above the fold. -->
+That deployment target is unmeasured and not yet implemented. The current
+Semgrep and Gitleaks commands inspect source and secret patterns; they do not
+provide dependency-vulnerability or provenance verification.
 
 ## What it does
 
-<Three or four sentences. Assume the reader has 60 seconds and has never heard of this.>
+The example module and its test exercise the tools that later projects can reuse.
+TypeScript checks the code's types, Vitest checks assertions and coverage, and
+Biome enforces the saved formatting and lint rules. Semgrep applies one local
+security rule; Gitleaks scans both current files and locally available Git history.
 
 ## Architecture
 
-<A diagram. Mermaid renders on GitHub — use it rather than describing boxes in prose.>
+Current local commands:
 
 ```mermaid
 flowchart LR
-  A[client] --> B[worker]
-  B --> C[(postgres)]
+    A[Source and configuration] --> B[npm scripts]
+    B --> C[TypeScript type checking]
+    B --> D[Vitest tests and coverage]
+    B --> E[Biome formatting and lint]
+    B --> F[Semgrep source rule]
+    B --> G[Gitleaks current files]
+    G -->|on success| H[Gitleaks Git history]
 ```
+
+CI will invoke local commands in a later increment. No application server,
+database, or deployed service is part of this checkpoint.
 
 ## Why this design
 
-<Three decisions and the alternative you rejected, one short paragraph each. This section is
-half the value of the repo. Most portfolios skip it.>
+1. **Explicit runtime and dependency pins:** `.nvmrc`, engine requirements, and
+   the npm lockfile keep the selected setup visible. A floating runtime is easier
+   to upgrade but can make different machines run different tool versions.
+2. **Small local commands:** Biome handles formatting and linting together;
+   Vitest provides tests and coverage. Separate scripts make failures easier to
+   identify than a single opaque command. Coverage does not measure assertion quality.
+3. **Local scanners:** Semgrep's original rule is reviewable with the template,
+   though its coverage is much narrower than a maintained rule collection.
+   Standalone Gitleaks works with current files and Git history. Scanner binaries
+   are separate prerequisites with manual pins; see their [setup and tradeoffs](docs/scanners.md).
 
-1. **<Decision>** — chose X over Y because …
-2. **<Decision>** — …
-3. **<Decision>** — …
-
-## Numbers
-
-<Measured, not estimated. "About 40 req/s before the connection pool bites, here is the graph"
-beats "it's fast" in every interview.>
-
-| Metric | Value | How measured |
-| ------ | ----- | ------------ |
-|        |       |              |
-
-## Where it fails
-
-<Honest limitations. What breaks, at what scale, and what you would do about it. This is the
-section that reads as senior.>
+Architecture decisions with lasting consequences belong in
+[ADRs](docs/adr/001-record-architecture-decisions.md).
 
 ## Run it
 
-Local tooling is implemented through the coverage gate. Biome is installed;
-formatting/linting setup and the deployment quickstart are still pending.
-Follow [runtime setup](docs/runtime.md) to install nvm first.
+On a new machine, follow [runtime setup](docs/runtime.md), then:
 
 ```bash
 nvm install
 nvm use
 npm ci
+```
+
+Install the external scanner CLIs using [scanner setup](docs/scanners.md).
+`npm ci` installs the JavaScript tools; it does not install Semgrep or Gitleaks.
+Then run:
+
+```bash
+npm run format:check
+npm run lint
 npm run typecheck
 npm test
 npm run coverage
+npm run scan:code
+npm run scan:secrets
 ```
 
-Coverage requires 100% of source statements, branches, functions, and lines,
-including unimported source. See the [coverage explanation and verification](docs/coverage-gate.md)
-and [implementation checklist](docs/implementation-plan.md) for current progress.
+Use `npm run format` to apply formatting changes. Once a terminal is using the
+pinned runtime, repeated `nvm use` is unnecessary; use it when selecting a
+different project's runtime or correcting the active version.
+
+## Numbers
+
+Observed local evidence and its limits are recorded in the
+[checkpoint review](docs/checkpoint-2026-09-10.md).
+
+| Metric | Observed value | Evidence |
+| --- | --- | --- |
+| Test suite | 1 test | Vitest |
+| Statement and line coverage | 1/1 each | Coverage summary |
+| Branch and function coverage | 0/0 each | Example has neither |
+| Semgrep rule scope | 1 direct-eval rule over 2 TypeScript files | Local scan |
+| Gitleaks history at the reviewed baseline | 2 local commits | History scan |
+| Clone-to-live setup time | Unmeasured | Deployment pending |
+
+## Where it fails
+
+- The example is intentionally tiny; passing checks do not establish production readiness.
+- Semgrep checks direct `eval` calls only. Gitleaks uses patterns and can miss
+  secrets or report false positives; it does not prove whether a credential works.
+- Git history scanning only covers history available locally. Git and scanner
+  ignores have different behavior; see [scanner scope](docs/scanners.md).
+- YAML and TOML configuration parsing is verified by their scanners. The current
+  Biome format/lint checks cover supported files, not every file in the repository.
+- CI, build/deployment, a recorded demo, template publication, and a measured
+  deployment quickstart remain pending.
 
 ## Out of scope
 
-<Copied from the spec. Says as much about your judgement as the feature list does.>
+Application features, Docker, monorepo tooling, and publishing a scaffolder.
 
 ## Versions
 
-<Every dependency that matters, pinned, with the date you last checked it. Cross-check against
-the phase's newest file in `phases/phase-<N>/verified/`.>
+Current project pins, checked against saved configuration and installed tools:
 
-_Last verified: <YYYY-MM-DD>_
+| Tool | Pin |
+| --- | --- |
+| Node / bundled npm | 24.20.0 / 11.19.0 |
+| TypeScript | 7.0.2 |
+| Vitest / V8 coverage provider | 5.0.0 / 5.0.0 |
+| Vite | 8.2.2 |
+| Biome | 2.5.12 |
+| Node type declarations | 24.13.3 |
+| Semgrep CLI | 1.176.1 |
+| Gitleaks CLI | 8.30.1 |
+
+These are selected pins, not claims that every tool is the latest release.
+Runtime provenance is in [runtime setup](docs/runtime.md); scanner release
+sources and installation are in [scanner setup](docs/scanners.md).
+Dependency pins and resolved packages are recorded in `package.json` and
+`package-lock.json`. Final tooling choices and measured deployment evidence
+remain part of the [implementation plan](docs/implementation-plan.md).

@@ -1,10 +1,29 @@
+# Installed dependencies
 node_modules/
+
+# Generated build and test output
 dist/
 coverage/
 .vitest/
+
+# Local Cloudflare CLI state
 .wrangler/
+
+# Local environment values; keep non-secret examples eligible for Git
 .env
 .env.*
 !.env.example
+
+# Optional scanner reports; scanner configuration belongs in Git
+/gitleaks-report.json
+/gitleaks-report.sarif
+/gitleaks-report.csv
+/semgrep-report.json
+/semgrep-report.sarif
+
+# Local logs and OS metadata
 *.log
 .DS_Store
+
+# Personal next-session prompt; shared continuity is in docs/handoff.md
+today.txt
