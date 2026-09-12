@@ -4,6 +4,9 @@ This checkpoint records local implementation and review. It does not mark P0.1,
 a roadmap week, or a learning goal complete. Git staging, commit, and push belong
 to the user; their completion must be verified from actual Git state/output.
 
+For the current stage, see the [2026-09-12 checkpoint](checkpoint-2026-09-12.md).
+The results below describe September 10 and remain historical.
+
 ## Review scope and findings
 
 Reviewed the complete current working tree against
@@ -30,15 +33,15 @@ local-checkpoint implementation failures.
 All seven commands passed on 2026-09-10 using Node `v24.20.0` and npm
 `11.19.0`, selected through nvm. These checks ran against the local working tree.
 
-| Command | Exit | Observed result |
-| --- | --- | --- |
-| `npm run format:check` | 0 | 6 files checked; no fixes applied |
-| `npm run lint` | 0 | 6 files checked; no warnings or errors |
-| `npm run typecheck` | 0 | No TypeScript diagnostics |
-| `npm test` | 0 | 1 test file, 1 test passed |
-| `npm run coverage` | 0 | Test passed; all four configured coverage gates passed |
-| `npm run scan:code` | 0 | 1 rule, 2 files, 0 findings |
-| `npm run scan:secrets` | 0 | Current files and 2 existing Git commits: no leaks found |
+| Command                | Exit | Observed result                                          |
+| ---------------------- | ---- | -------------------------------------------------------- |
+| `npm run format:check` | 0    | 6 files checked; no fixes applied                        |
+| `npm run lint`         | 0    | 6 files checked; no warnings or errors                   |
+| `npm run typecheck`    | 0    | No TypeScript diagnostics                                |
+| `npm test`             | 0    | 1 test file, 1 test passed                               |
+| `npm run coverage`     | 0    | Test passed; all four configured coverage gates passed   |
+| `npm run scan:code`    | 0    | 1 rule, 2 files, 0 findings                              |
+| `npm run scan:secrets` | 0    | Current files and 2 existing Git commits: no leaks found |
 
 Coverage reports statements and lines at 1/1 each, with branches and functions
 at 0/0 each. The displayed 100% does not establish broad behavioral coverage.

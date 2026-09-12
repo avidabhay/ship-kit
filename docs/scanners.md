@@ -3,7 +3,9 @@
 Run scanner commands from the repository root with the pinned Node/npm runtime
 active; see [runtime.md](runtime.md). Semgrep and Gitleaks are separate CLIs on
 `PATH`. Their versions are manually pinned below; `npm ci` neither installs nor
-enforces them. CI and deployment remain pending.
+enforces them. The local CI workflow now includes both scanner installations and scans,
+with full-history checkout for Gitleaks. GitHub execution and deployment remain
+unverified.
 
 ## Installation
 
@@ -85,7 +87,8 @@ and ignored `.env` files remain eligible unless a scanner exclusion applies.
 [directory scanning implementation](https://github.com/gitleaks/gitleaks/blob/v8.30.1/sources/files.go)
 
 History scanning covers only locally available history; a shallow clone limits
-that coverage. The last reviewed run covered 2 local commits. All saved Gitleaks
+that coverage. The 2026-09-12 local run covered 3 commits; see the
+[current checkpoint](checkpoint-2026-09-12.md). All saved Gitleaks
 scripts use `--redact=100` and `--exit-code 1`: detected values are fully redacted
 and findings fail with exit 1. Configuration or execution errors can also fail,
 so read the diagnostic. `&&` stops the combined command after a failing file scan.

@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 rules:
-    -
-        id: ship-kit-no-direct-eval
-        languages: [typescript]
-        severity: HIGH
-        message: Avoid eval; write explicit code or parse data instead.
-        pattern: eval(...)
+  -
+    id: ship-kit-no-direct-eval
+    languages: [typescript]
+    severity: HIGH
+    message: Avoid eval; write explicit code or parse data instead.
+    pattern: eval(...)

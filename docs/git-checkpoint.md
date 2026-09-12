@@ -8,6 +8,15 @@ At preparation on 2026-09-10, local `main` and GitHub's `main` both pointed to
 `https://github.com/avidabhay/ship-kit.git`. This is a snapshot, not proof of a
 later commit or push. A push saves the checkpoint; it does not deploy or ship it.
 
+## Follow-up — 2026-09-12
+
+The original checkpoint was confirmed pushed at `56764b8`. The commands below
+remain an explanation of that earlier snapshot. Current work includes the new
+`.github/workflows/ci.yml` and `.zed/settings.json`, which the original `git add`
+list does not include. Inspect all current changes and review an updated explicit
+staging list before the next commit. The assistant still does not stage, commit,
+or push. See the [current checkpoint](checkpoint-2026-09-12.md).
+
 ## 1. Review and stage
 
 From the repository root:

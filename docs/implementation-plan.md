@@ -5,19 +5,20 @@ Keep continuity across chats in this repo. Start a new chat with
 [the handoff](handoff.md).
 
 - [x] Package setup: exact pins and lockfile, strict TypeScript, example,
-  one test, and ADR 001.
+      one test, and ADR 001.
 - [x] Coverage gate: matching provider, unimported source inclusion, explicit
-  thresholds, passing run, deliberate failure, and restored passing checks.
+      thresholds, passing run, deliberate failure, and restored passing checks.
 - [x] Guided review: types, assertions, and coverage experiments.
 - [x] Reproducible runtime: exact Node/npm, nvm setup, install guard, clean install.
 - [x] Formatting/linting: config, repository-wide scripts, formatting fixes, and
-  passing checks verified; user demonstrated lint warning failure and recovery.
+      passing checks verified; user demonstrated lint warning failure and recovery.
 - [x] Local scanners: Semgrep and Gitleaks commands, reviewed findings, and
-  restored passing scans. This records implementation evidence, not mastery.
-- [ ] CI: test → scan → build → deploy workflow.
+      restored passing scans. This records implementation evidence, not mastery.
+- [ ] CI: all local validation steps saved, including Semgrep and Gitleaks;
+      the first verified GitHub run remains. Build → deploy follows validation.
 - [ ] Deployment: Cloudflare Pages docs and GitHub template configuration.
 - [ ] Final documentation: required README sections, tool tradeoffs, and an actual
-  measured setup run.
+      measured setup run.
 
 ## What this project builds
 
@@ -36,18 +37,33 @@ existing scope. The user now requests a faster pace with learning preserved:
 bundle small related edits, give a short explanation, let the user implement,
 and review the result. Avoid a separate quiz or turn for every command.
 
+## Current update — 2026-09-12
+
+The user chose two-space indentation throughout Zed and this project. Biome now
+uses `indentWidth: 2`; its recommended lint preset is unchanged. Older four-space
+notes below are historical. The example remains deliberately small: one typed
+object and one test, with learner comments and inferred-type assertions preserved.
+
+The Git checkpoint was confirmed on GitHub at `56764b8`. A local CI workflow now
+contains quality checks, Semgrep, Gitleaks installation and separate file/history
+scans, and full-history checkout. YAML parsing and shell syntax checks pass; a
+GitHub run and runner installation behavior have not been verified.
+Build/deployment and final publication remain pending.
+
 ## Next concrete step
 
-Close the local-tooling checkpoint. The user performs Git staging, committing,
-and pushing themselves using [git-checkpoint.md](git-checkpoint.md); review their
-output. The assistant has not performed these actions. At the next session,
-inspect actual Git state first and finish that guided checkpoint if needed.
-Then introduce a minimal CI validation workflow for existing local checks, with
-fresh primary-source verification of action pins before implementation. No CI or
-deployment has been implemented. Do not repeat the completed scanner exercises.
+The workflow is ready for the user's staging, review, commit, and push. Guide
+those Git operations; do not perform them. Include the new workflow, Zed settings,
+and current checkpoint in the reviewed staging list. Inspect the resulting GitHub
+Actions run before calling CI verified, including scanner installation steps.
+The earlier local-tooling checkpoint is already pushed at `56764b8`; current CI,
+formatting, test, and documentation changes are still uncommitted.
 
-See the [2026-09-10 checkpoint review](checkpoint-2026-09-10.md) for final checks,
-review findings, and fixes. Durable scanner setup is in [scanners.md](scanners.md).
+See the [current checkpoint](checkpoint-2026-09-12.md) for status and actual local
+verification, and the [September 10 review](checkpoint-2026-09-10.md) for historical
+results. Keep the example simple; do not restore the removed runtime parser or
+extensive test matrix. Do not repeat completed scanner exercises. Build/deployment,
+setup-time measurement, and final template publication follow later.
 
 ## Gitleaks finding/recovery review — 2026-09-10
 
@@ -130,11 +146,11 @@ review findings, and fixes. Durable scanner setup is in [scanners.md](scanners.m
 
 Proposed npm scripts at preparation (subsequently saved):
 
-| Script | Command |
-| --- | --- |
-| `scan:secrets:files` | `gitleaks dir --config .gitleaks.toml --redact=100 --exit-code 1 .` |
+| Script                 | Command                                                             |
+| ---------------------- | ------------------------------------------------------------------- |
+| `scan:secrets:files`   | `gitleaks dir --config .gitleaks.toml --redact=100 --exit-code 1 .` |
 | `scan:secrets:history` | `gitleaks git --config .gitleaks.toml --redact=100 --exit-code 1 .` |
-| `scan:secrets` | `npm run scan:secrets:files && npm run scan:secrets:history` |
+| `scan:secrets`         | `npm run scan:secrets:files && npm run scan:secrets:history`        |
 
 Full redaction applies to detected secrets. Findings return exit 1; scan errors
 can also fail, so inspect the diagnostic. The aggregate runs history only after
@@ -182,7 +198,7 @@ and [CLI flags and exits](https://github.com/gitleaks/gitleaks/blob/v8.30.1/cmd/
   direct `eval(...)` calls with severity `HIGH`. This single rule provides narrow
   coverage; a clean scan does not establish overall application security.
 - The script is `semgrep scan --config .semgrep.yml --error --strict --metrics=off
-  --disable-version-check src`. Findings fail via `--error`; `--strict` also
+--disable-version-check src`. Findings fail via `--error`; `--strict` also
   fails warning-level scan errors. This is a local source-code scan.
 - Independent baseline through the pinned nvm runtime exited 0: 1 rule, 2 source
   targets, 0 findings. The application was not executed; the five existing checks

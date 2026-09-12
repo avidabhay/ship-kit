@@ -3,8 +3,10 @@
 A reusable TypeScript starter with strict type checking, tests and coverage,
 formatting/linting, and local source-code and secret scans.
 
-**Status — 2026-09-10:** local tooling checkpoint. CI, build/deployment, a live
-URL, and GitHub template publication are pending. This project is not shipped.
+**Status — 2026-09-12:** local tooling verified; CI implementation in progress.
+The local workflow includes quality checks, Semgrep, and both Gitleaks scans.
+The first verified GitHub run is next, followed by build/deployment and template
+publication. This project is not shipped.
 See the [implementation plan](docs/implementation-plan.md) and
 [next-session handoff](docs/handoff.md).
 
@@ -38,8 +40,10 @@ flowchart LR
     G -->|on success| H[Gitleaks Git history]
 ```
 
-CI will invoke local commands in a later increment. No application server,
-database, or deployed service is part of this checkpoint.
+The local [CI workflow](.github/workflows/ci.yml) invokes formatting, lint,
+typecheck, coverage, and Semgrep after checkout and installation. It targets
+pushes and pull requests to `main`. It also installs Gitleaks and scans current files and full Git history. No
+GitHub workflow run has been verified. No build or deployment step exists.
 
 ## Why this design
 
@@ -81,14 +85,17 @@ npm run scan:code
 npm run scan:secrets
 ```
 
-Use `npm run format` to apply formatting changes. Once a terminal is using the
+Use `npm run format` to apply the two-space formatting standard. Zed project
+settings match this preference; automatic YAML formatting is disabled to preserve
+standalone list dashes. Once a terminal is using the
 pinned runtime, repeated `nvm use` is unnecessary; use it when selecting a
 different project's runtime or correcting the active version.
 
 ## Numbers
 
 Observed local evidence and its limits are recorded in the
-[checkpoint review](docs/checkpoint-2026-09-10.md).
+[current checkpoint](docs/checkpoint-2026-09-12.md); the
+[September 10 review](docs/checkpoint-2026-09-10.md) preserves earlier evidence.
 
 | Metric | Observed value | Evidence |
 | --- | --- | --- |
@@ -96,7 +103,7 @@ Observed local evidence and its limits are recorded in the
 | Statement and line coverage | 1/1 each | Coverage summary |
 | Branch and function coverage | 0/0 each | Example has neither |
 | Semgrep rule scope | 1 direct-eval rule over 2 TypeScript files | Local scan |
-| Gitleaks history at the reviewed baseline | 2 local commits | History scan |
+| Gitleaks history on 2026-09-12 | 3 local commits | History scan |
 | Clone-to-live setup time | Unmeasured | Deployment pending |
 
 ## Where it fails
@@ -108,7 +115,8 @@ Observed local evidence and its limits are recorded in the
   ignores have different behavior; see [scanner scope](docs/scanners.md).
 - YAML and TOML configuration parsing is verified by their scanners. The current
   Biome format/lint checks cover supported files, not every file in the repository.
-- CI, build/deployment, a recorded demo, template publication, and a measured
+- CI is only partially implemented locally; GitHub execution is unverified.
+  Build/deployment, a recorded demo, template publication, and a measured
   deployment quickstart remain pending.
 
 ## Out of scope

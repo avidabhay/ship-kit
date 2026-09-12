@@ -4,5 +4,5 @@ useDefault = true
 [[allowlists]]
 description = "Generated coverage and build output"
 paths = [
-    '''(?:^|/)(?:coverage|dist)(?:/|$)''',
+  '''(?:^|/)(?:coverage|dist)(?:/|$)''',
 ]

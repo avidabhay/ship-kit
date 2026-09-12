@@ -4,9 +4,21 @@ Formatting/lint evidence: 2026-09-09. The later full local review is recorded in
 [the 2026-09-10 checkpoint](checkpoint-2026-09-10.md). These notes do not mark the
 project or a learning goal complete.
 
+## Current status — 2026-09-12
+
+The user chose two-space indentation throughout Zed and this project. Biome and
+project editor settings now agree. YAML format-on-save is disabled in
+`.zed/settings.json` to preserve standalone list dashes. Older four-space examples
+below explain the previous exercises, not the current indentation requirement.
+
+The workflow now contains the npm quality checks, Semgrep, and Gitleaks steps
+locally; a verified GitHub run remains pending. The
+[current checkpoint](checkpoint-2026-09-12.md) records passing local checks after
+reformatting: 7 supported files checked by formatting/lint, 1 test via coverage.
+
 ## Saved configuration
 
-`biome.json` enables four-space formatting, the recommended lint preset, and
+`biome.json` enables two-space formatting, the recommended lint preset, and
 Git ignore integration. Use `linter.rules.preset: "recommended"`: the earlier
 `recommended: true` option still works but emits a deprecation diagnostic.
 The existing `.gitignore` excludes generated output such as `coverage/`.
@@ -97,9 +109,8 @@ A typical job checks out the submitted code, installs the selected runtime and
 locked dependencies, runs checks, and reports success or failure.
 
 Think of a Java project whose Jenkins job runs its Maven checks automatically.
-Here, the future workflow will invoke our npm scripts. The commands are ready
-locally; the GitHub Actions workflow is not implemented yet. Deployment is a
-later step in the existing project plan.
+Here, the local workflow invokes our npm scripts. Its GitHub execution is not
+yet verified. Deployment is a later step in the existing project plan.
 
 Conceptual future flow, not a claim of current implementation:
 
